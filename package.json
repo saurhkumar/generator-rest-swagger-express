@@ -1,9 +1,7 @@
 {
-  "name": "generator-express-rest-api",
-  "version": "0.0.0",
-  "description": "A general purpose rest api generator for multiple db backend ",
-  "author": "Saurabh",
-  "license": "ISC",
+  "name": "generator-name",
+  "version": "0.1.0",
+  "description": "",
   "files": [
     "generators"
   ],
@@ -11,6 +9,7 @@
     "yeoman-generator"
   ],
   "dependencies": {
+    "glob": "^7.2.0",
     "yeoman-generator": "^5.4.2"
   }
 }

@@ -1,0 +1,95 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "<%= serviceName %> API",
+    "description": "<%= description %>",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/v1/<%= serviceName %>"
+    }
+  ],
+  "paths": {
+    "/hello": {
+      "x-controller": "controller",
+      "get": {
+        "summary": "Simple hello world",
+        "operationId": "getHello",
+        "description": "Hello world",
+        "tags": ["Products"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "description": "age",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello World",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/hello"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "hello": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "user name"
+          },
+          "age": {
+            "type": "integer",
+            "description": "user age"
+          }
+        }
+      },
+      "Error": {
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
