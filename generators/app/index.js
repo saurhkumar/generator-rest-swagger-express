@@ -48,7 +48,7 @@ module.exports = class extends Generator {
     );
     // for common files
     this.fs.copyTpl(
-      glob.sync(this.templatePath('common/**/*')), //this.templatePath('index.html'),
+      glob.sync(this.templatePath('common/**/*')),
       this.destinationPath(),
       {
         serviceName: this.answers.serviceName,
@@ -59,7 +59,7 @@ module.exports = class extends Generator {
 
     // for helpers
     this.fs.copyTpl(
-      glob.sync(this.templatePath('helpers/**/*')), //this.templatePath('index.html'),
+      glob.sync(this.templatePath('helpers/**/*')),
       this.destinationPath(`api/helpers`)
     );
 
