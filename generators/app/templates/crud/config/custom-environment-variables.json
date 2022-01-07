@@ -1,0 +1,8 @@
+{
+  "App": {
+    "port": "APP_PORT"
+  },
+  "Log": {
+    "level": "LOG_LEVEL"
+  }
+}

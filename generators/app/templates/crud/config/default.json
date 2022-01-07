@@ -1,0 +1,27 @@
+{
+  "App": {
+    "name": "<%= serviceName %>",
+    "v1Path": "/v1/<%= serviceName %>",
+    "port": 3000
+  },
+  "Log": {
+    "level": "debug",
+    "silent": false
+  },
+  "Database": {
+    "server": "localhost",
+    "name": "test",
+    "user": "admin",
+    "password": "admin",
+    "logging": false
+  },
+  "Unittest": {
+    "Database": {
+      "server": "localhost",
+      "name": "unittest",
+      "user": "admin",
+      "password": "admin",
+      "logging": false
+    }
+  }
+}

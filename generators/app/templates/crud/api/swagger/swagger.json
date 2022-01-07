@@ -1,0 +1,392 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "<%= serviceName %> API",
+    "description": "<%= description %>",
+    "version": "<%= version %>"
+  },
+  "servers": [
+    {
+      "url": "/v1/<%= serviceName %>"
+    }
+  ],
+  "tags": [
+    {
+      "name": "<%= objectName %>s",
+      "description": "Everything about your <%= objectNameLowerCase %>s"
+    }
+  ],
+  "paths": {
+    "/<%= objectNameLowerCase %>s": {
+      "x-controller": "controller",
+      "get": {
+        "tags": ["<%= objectName %>s"],
+        "summary": "Get all <%= objectNameLowerCase %>s",
+        "operationId": "get<%= objectName %>s",
+        "description": "Get all <%= objectNameLowerCase %>s",
+        "parameters": [
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Number of records to return",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 10
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of records to skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "<%= objectName %>s information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/<%= objectName %>s"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["<%= objectName %>s"],
+        "summary": "Create <%= objectNameLowerCase %>",
+        "description": "Create a <%= objectNameLowerCase %>",
+        "operationId": "create<%= objectName %>",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Create<%= objectName %>"
+                  }
+                ],
+                "required": ["name", "address", "age"]
+              }
+            }
+          },
+          "description": "Created <%= objectNameLowerCase %> object",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "<%= objectName %> information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/<%= objectName %>"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["<%= objectName %>s"],
+        "summary": "Delete <%= objectNameLowerCase %>",
+        "description": "Delete all <%= objectNameLowerCase %>s",
+        "operationId": "delete<%= objectName %>s",
+        "responses": {
+          "200": {
+            "description": "counts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["count"],
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "description": "number of records deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/<%= objectNameLowerCase %>s/{id}": {
+      "x-controller": "controller",
+      "get": {
+        "tags": ["<%= objectName %>s"],
+        "summary": "Get a <%= objectNameLowerCase %>",
+        "operationId": "get<%= objectName %>",
+        "description": "Get a <%= objectNameLowerCase %> by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of <%= objectNameLowerCase %>",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "<%= objectName %> information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/<%= objectName %>"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["<%= objectName %>s"],
+        "summary": "Update <%= objectNameLowerCase %>",
+        "description": "Update a <%= objectNameLowerCase %>",
+        "operationId": "update<%= objectName %>",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of <%= objectNameLowerCase %>",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Create<%= objectName %>"
+                  }
+                ]
+              }
+            }
+          },
+          "description": "Update <%= objectNameLowerCase %> object",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "<%= objectName %> information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/<%= objectName %>"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["<%= objectName %>s"],
+        "summary": "Delete a <%= objectNameLowerCase %>",
+        "description": "Delete a <%= objectNameLowerCase %>s by Id",
+        "operationId": "delete<%= objectName %>",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of <%= objectNameLowerCase %>",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No information"
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "<%= objectName %>": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "<%= objectNameLowerCase %> id"
+          },
+          "name": {
+            "type": "string",
+            "description": "<%= objectNameLowerCase %> name"
+          },
+          "address": {
+            "type": "string",
+            "description": "<%= objectNameLowerCase %> address"
+          },
+          "country": {
+            "type": "string",
+            "description": "<%= objectNameLowerCase %> country"
+          },
+          "age": {
+            "type": "integer",
+            "description": "<%= objectNameLowerCase %> age"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "<%= objectNameLowerCase %> creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "<%= objectNameLowerCase %> update timestamp"
+          },
+          "version": {
+            "type": "integer",
+            "description": "<%= objectNameLowerCase %> version"
+          }
+        }
+      },
+      "<%= objectName %>s": {
+        "type": "object",
+        "required": ["count", "value"],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "example": 10
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/<%= objectName %>"
+                }
+              ],
+              "required": ["id", "name", "address", "age"]
+            }
+          }
+        }
+      },
+      "Create<%= objectName %>": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "<%= objectNameLowerCase %> name",
+            "pattern": "^[A-Za-z0-9_ ]+$",
+            "example": "Bob"
+          },
+          "address": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_ ]+$",
+            "description": "<%= objectNameLowerCase %> address",
+            "example": "Address"
+          },
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Za-z ]+$",
+            "description": "<%= objectNameLowerCase %> country",
+            "example": "USA"
+          },
+          "age": {
+            "type": "integer",
+            "description": "<%= objectNameLowerCase %> age",
+            "minimum": 0,
+            "maximum": 150,
+            "example": 30
+          }
+        }
+      },
+      "Error": {
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

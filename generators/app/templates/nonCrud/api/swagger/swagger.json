@@ -3,7 +3,7 @@
   "info": {
     "title": "<%= serviceName %> API",
     "description": "<%= description %>",
-    "version": "1.0.0"
+    "version": "<%= version %>"
   },
   "servers": [
     {
