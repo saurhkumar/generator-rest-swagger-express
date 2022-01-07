@@ -15,29 +15,40 @@ module.exports = class extends Generator {
         type: 'input',
         name: 'serviceName',
         message: 'Your service name',
-        default: 'myApp',
-        store: true
+        default: 'myApp'
       },
       {
         type: 'input',
         name: 'description',
         message: 'Your service description',
-        default: 'myApp rest interface',
-        store: true
+        default: 'myApp rest interface'
       },
       {
         type: 'input',
         name: 'version',
         message: 'Your service version',
-        default: '0.0.0',
-        store: true
+        default: '0.0.0'
+      },
+
+      {
+        type: 'list',
+        name: 'appType',
+        message: 'Select application type name',
+        choices: ['CRUD', 'NonCRUD'],
+        default: 'NonCRUD'
       },
       {
         type: 'input',
         name: 'objectName',
+        when: function (response) {
+          let result = false;
+          if (response.appType == 'CRUD') {
+            result = true;
+          }
+          return result;
+        },
         message: 'Object name',
-        default: 'User',
-        store: true
+        default: 'User'
       }
     ]);
   }
@@ -54,7 +65,7 @@ module.exports = class extends Generator {
         serviceName: this.answers.serviceName,
         description: this.answers.description,
         version: this.answers.version
-      } // user answer `name` used
+      }
     );
 
     // for helpers
@@ -64,15 +75,40 @@ module.exports = class extends Generator {
     );
 
     // for specific files
-    this.fs.copyTpl(
-      glob.sync(this.templatePath('nonCrud/**/*')),
-      this.destinationPath(),
-      {
-        serviceName: this.answers.serviceName,
-        description: this.answers.description,
-        version: this.answers.version
-      }
-    );
+    if (this.answers.appType == 'NonCRUD') {
+      this.fs.copyTpl(
+        glob.sync(this.templatePath('nonCrud/**/*')),
+        this.destinationPath(),
+        {
+          serviceName: this.answers.serviceName,
+          description: this.answers.description,
+          version: this.answers.version
+        }
+      );
+    } else {
+      // copy files
+      this.fs.copyTpl(
+        glob.sync(this.templatePath('crud/**/*')),
+        this.destinationPath(),
+        {
+          serviceName: this.answers.serviceName,
+          description: this.answers.description,
+          version: this.answers.version,
+          objectName: this._capitalizeFirstLetter(this.answers.objectName),
+          objectNameLowerCase: this._lowerCaseFirstLetter(
+            this.answers.objectName
+          )
+        }
+      );
+    }
+  }
+
+  _capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  _lowerCaseFirstLetter(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
   }
 
   end() {
