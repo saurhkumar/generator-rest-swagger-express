@@ -4,7 +4,7 @@
 
 ## About The Project
 
-RESTful API generator with swagger integration using NodeJS, Express. It support SQL and Nno-CRUD option now but other databases support is on the way
+RESTful API generator with swagger integration using NodeJS, Express. It supports SQL and Non-CRUD options now, but other databases support is on the way
 
 <!-- GETTING STARTED -->
 
@@ -23,7 +23,7 @@ This section list all major frameworks/libraries used in this project.
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
+This is an example of how you may give instructions on setting up your project
 
 ### Prerequisites
 
@@ -46,16 +46,74 @@ This is an example of how you may give instructions on setting up your project l
 
 ### How to additional REST paths
 
-1. Go to you swagger file `api/swagger.swagger.json` and add new path definition, assuming
+1. Go to you swagger file `api/swagger/swagger.json` and add new path definition, under paths add something like this
+
+   ```
+     "paths": {
+       "/newPath": {
+         "x-controller": "yourController",
+         "get": {
+             ...
+           }
+         }
+       },
+   ```
+
+   To know more about the swagger path definition see [official docs](https://swagger.io/specification)
+
+2. Add controller in `api/controllers` directory.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Features
 
-1. Out of the box swaggerUI, swagger validation and test cases added
+1. Out of the box swaggerUI, swagger validation, REST API
 2. Test cases available with 100 % coverage
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+## Generated Application Details
+
+**Note:** Below information is applicable CRUD/Non-CRUD
+
+Usually your generated project directory should like this:
+
+```
+ |-app.js <--- Entry point of your application
+ |-api
+ | |-controllers <--- Directory for all your controllers
+ | | |-controller.js
+ | |-helpers <--- Directory for all your controllers
+ | | |-als.js
+ | | |-shortId.js
+ | |-services <--- Directory for all your controllers
+ | | |-service.js
+ | | |-syncService.js <--- Process you want to trigger when app starts
+ | |-swagger
+ | | |-swagger.json <--- OpenAPI Specification file
+ |-config <--- Directory for your config
+ | |-custom-environment-variables.json
+ | |-default.json
+ | |-development.json
+ | |-production.json
+ |-logger.js <--- General purpose logger file
+ |-package.json <--- NPM package file
+ |-Readme.md
+ |-test
+ | |-test.js
+```
+
+1. **app.js** : This is the entry point of your application, it has logic to start  
+   database connection, background process, initialize middleware and so.
+2. **syncService.js** : You can add a background process, that you want to trigger when the application starts
+
+### Configuration Management
+
+This generator uses the `config` node package to manage all your external configuration. To know more, what's the use of different files in `/config` directory, visit the [Config](https://www.npmjs.com/package/config) page
+
+### Test's Logs
+
+Once you run test cases (using the command `npm test`), a /unittest.log file will be generated. In your terminal, you will only see all passed and failed tests. To see test logs open the /unittest.log file. This file will regenerate with every test case run
 
 <!-- ROADMAP -->
 
@@ -65,6 +123,8 @@ This is an example of how you may give instructions on setting up your project l
 - [ ] Add correlationId to every log
 - [ ] Add projection support
 - [ ] Add pagination and projection test cases
+- [ ] Add Cassandra DB support
+- [ ] Add MongoDB support
 
 <!-- CONTRIBUTING -->
 
