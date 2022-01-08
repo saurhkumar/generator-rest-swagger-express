@@ -26,8 +26,9 @@ This is an example of how you may give instructions on setting up your project l
 
 ### Prerequisites
 
-- You need a mySQL server up and running and it must have two databases `test` and `unittest` (of course you can change names, just see default.json file)  
-  You can run it as a [docker](https://hub.docker.com/_/mysql) or install it as a [standalone application](https://www.mysql.com/downloads/)
+1. You need a mySQL server up and running and it must have two databases `test` and `unittest` (of course you can change names, just see default.json file)  
+   You can run it as a [docker](https://hub.docker.com/_/mysql) or install it as a [standalone application](https://www.mysql.com/downloads/)
+2. Go to the default.json file (`config/default.json`) and passes the MYSQL db configuration
 
 - Node.js > v14 needed. You can get it [here](https://nodejs.org/en/download/)
 - Better install mocha on global level `npm install --global mocha`
