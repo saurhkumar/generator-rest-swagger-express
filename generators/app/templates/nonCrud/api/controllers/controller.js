@@ -10,5 +10,9 @@ async function getHello(req, res) {
     return res.json(result);
   } catch (error) /* istanbul ignore next */ {
     logger.error(`getHello: Error while getHello: ${error}`);
+    return res.status(error.statusCode || 500).send({
+      message: error.message || 'Internal Server Error',
+      statusCode: error.statusCode || 500
+    });
   }
 }

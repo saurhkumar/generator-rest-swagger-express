@@ -113,7 +113,7 @@ This generator uses the `config` node package to manage all your external config
 
 ### Test's Logs
 
-Once you run test cases (using the command `npm test`), a /unittest.log file will be generated. In your terminal, you will only see all passed and failed tests. To see test logs open the /unittest.log file. This file will regenerate with every test case run
+Once you run test cases (using the command `npm test`), a /unittest.log file will be generated. In your terminal, you will only see all passed and failed tests. To see test logs open the /unittest.log file. This file will regenerate with every test case run. If you want to see all the logs when the test runs, go to your test file `/test/test.js` and comment out `logger('unittest.log').switchToFile();`
 
 <!-- ROADMAP -->
 
