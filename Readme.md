@@ -27,16 +27,16 @@ This is an example of how you may give instructions on setting up your project
 
 ### Prerequisites
 
-- Non CRUD Application
+- Non CRUD Application  
   None
-- CRUD Application
+- CRUD Application  
   Specific database needed, let's say you are running MYSQL based app then MYSQL server needed, for more details see your generated app
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Installation
 
-1. Go to your command-line interface and type `npm install`.
+Go to your command-line interface and type `npm install -g yo generator-rest-swagger-express`
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -44,31 +44,7 @@ This is an example of how you may give instructions on setting up your project
 
 ## Usage
 
-### How to additional REST paths
-
-1. Go to you swagger file `api/swagger/swagger.json` and add new path definition, under paths add something like this
-
-   ```
-     "paths": {
-       "/newPath": {
-         "x-controller": "yourController",
-         "get": {
-             ...
-           }
-         }
-       },
-   ```
-
-   To know more about the swagger path definition see [official docs](https://swagger.io/specification)
-
-2. Add controller in `api/controllers` directory.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Features
-
-1. Out of the box swaggerUI, swagger validation, REST API
-2. Test cases available with 100 % coverage
+Go to your command-line interface and type `yo rest-swagger-express` and answer the prompts.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -107,13 +83,47 @@ Usually your generated project directory should like this:
    database connection, background process, initialize middleware and so.
 2. **syncService.js** : You can add a background process, that you want to trigger when the application starts
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### Configuration Management
 
 This generator uses the `config` node package to manage all your external configuration. To know more, what's the use of different files in `/config` directory, visit the [Config](https://www.npmjs.com/package/config) page
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### Test's Logs
 
 Once you run test cases (using the command `npm test`), a /unittest.log file will be generated. In your terminal, you will only see all passed and failed tests. To see test logs open the /unittest.log file. This file will regenerate with every test case run. If you want to see all the logs when the test runs, go to your test file `/test/test.js` and comment out `logger('unittest.log').switchToFile();`
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### How to additional REST paths
+
+1. Go to you swagger file `api/swagger/swagger.json` and add new path definition, under paths add something like this
+
+   ```
+     "paths": {
+       "/newPath": {
+         "x-controller": "yourController",
+         "get": {
+             ...
+           }
+         }
+       },
+   ```
+
+   To know more about the swagger path definition see [official docs](https://swagger.io/specification)
+
+2. Add controller in `api/controllers` directory.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Features
+
+1. Out of the box swaggerUI, swagger validation, REST API
+2. Test cases available with 100 % coverage
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 
