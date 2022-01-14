@@ -33,7 +33,7 @@ module.exports = class extends Generator {
       {
         type: 'list',
         name: 'appType',
-        message: 'Select application type name',
+        message: 'Select application type',
         choices: ['CRUD', 'NonCRUD'],
         default: 'NonCRUD'
       },
@@ -49,6 +49,20 @@ module.exports = class extends Generator {
         },
         message: 'Object name',
         default: 'User'
+      },
+      {
+        type: 'list',
+        name: 'appBackend',
+        when: function (response) {
+          let result = false;
+          if (response.appType == 'CRUD') {
+            result = true;
+          }
+          return result;
+        },
+        message: 'Select your application backend',
+        choices: ['MySQL', 'MongoDB'],
+        default: 'MySQL'
       }
     ]);
   }
@@ -88,7 +102,7 @@ module.exports = class extends Generator {
     } else {
       // copy files
       this.fs.copyTpl(
-        glob.sync(this.templatePath('crud/**/*')),
+        glob.sync(this.templatePath('crud/common/**/*')),
         this.destinationPath(),
         {
           serviceName: this.answers.serviceName,
@@ -100,6 +114,45 @@ module.exports = class extends Generator {
           )
         }
       );
+
+      if (this.answers.appBackend == 'MySQL') {
+        this.fs.copyTpl(
+          glob.sync(this.templatePath('crud/SQL/**/*')),
+          this.destinationPath(),
+          {
+            serviceName: this.answers.serviceName,
+            description: this.answers.description,
+            version: this.answers.version,
+            objectName: this._capitalizeFirstLetter(this.answers.objectName),
+            objectNameLowerCase: this._lowerCaseFirstLetter(
+              this.answers.objectName
+            )
+          }
+        );
+        this.fs.copyTpl(
+          glob.sync(this.templatePath('crud/SQLHelpers/**/*')),
+          this.destinationPath(`api/helpers`)
+        );
+      } else {
+        this.fs.copyTpl(
+          glob.sync(this.templatePath('crud/mongo/**/*')),
+          this.destinationPath(),
+          {
+            serviceName: this.answers.serviceName,
+            description: this.answers.description,
+            version: this.answers.version,
+            objectName: this._capitalizeFirstLetter(this.answers.objectName),
+            objectNameLowerCase: this._lowerCaseFirstLetter(
+              this.answers.objectName
+            )
+          }
+        );
+
+        this.fs.copyTpl(
+          glob.sync(this.templatePath('crud/mongoHelpers/**/*')),
+          this.destinationPath(`api/helpers`)
+        );
+      }
     }
   }
 

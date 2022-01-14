@@ -1,0 +1,26 @@
+{
+  "App": {
+    "name": "<%= serviceName %>",
+    "v1Path": "/v1/<%= serviceName %>",
+    "port": 3000
+  },
+  "Log": {
+    "level": "debug",
+    "silent": false
+  },
+  "Database": {
+    "server": "mongodb://localhost:27017",
+    "name": "test",
+    "user": "",
+    "password": "",
+    "logging": false
+  },
+  "Unittest": {
+    "Database": {
+      "server": "mongodb://localhost:27017",
+      "name": "unittest",
+      "user": "",
+      "password": ""
+    }
+  }
+}

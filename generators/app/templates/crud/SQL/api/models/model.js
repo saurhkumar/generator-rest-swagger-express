@@ -1,18 +1,23 @@
+const config = require('config');
+
 const logger = require('../../logger')(__filename);
-const SQLHelper = require('../helpers/mysqlHelper');
+const { DataTypes } = require('sequelize');
+const sqlHelper = require('../helpers/mysqlHelper');
 const shortId = require('../helpers/shortId');
-const <%= objectName %> = SQLHelper.sequelize.define(
+const sequelize = sqlHelper.connect(config.Database);
+
+const <%= objectName %> = sequelize.define(
   '<%= objectName %>',
   {
     id: {
-      type: SQLHelper.dataTypes.STRING,
+      type: DataTypes.STRING,
       primaryKey: true,
       defaultValue: shortId.generate
     },
-    name: { type: SQLHelper.dataTypes.STRING, allowNull: false },
-    age: { type: SQLHelper.dataTypes.SMALLINT, allowNull: false },
-    address: { type: SQLHelper.dataTypes.STRING, allowNull: false },
-    country: { type: SQLHelper.dataTypes.STRING, allowNull: true }
+    name: { type: DataTypes.STRING, allowNull: false },
+    age: { type: DataTypes.SMALLINT, allowNull: false },
+    address: { type: DataTypes.STRING, allowNull: false },
+    country: { type: DataTypes.STRING, allowNull: true }
   },
   { timestamps: true, version: true }
 );
@@ -24,9 +29,19 @@ module.exports = {
   delete<%= objectName %>: delete<%= objectName %>,
   get<%= objectName %>s: get<%= objectName %>s,
   delete<%= objectName %>s: delete<%= objectName %>s,
-  start: <%= objectName %>, // warning : apart from init, do not use for anything else
-  close: SQLHelper.close
+  start: start,
+  close: close
 };
+
+async function start() {
+  // create table if not exist
+  await User.sync();
+}
+
+async function close() {
+  // close connection
+  await sequelize.close();
+}
 
 async function get<%= objectName %>(id) {
   return await <%= objectName %>.findByPk(id);

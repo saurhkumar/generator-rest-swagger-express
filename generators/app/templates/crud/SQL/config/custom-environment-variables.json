@@ -1,0 +1,18 @@
+{
+  "App": {
+    "port": "APP_PORT"
+  },
+  "Log": {
+    "level": "LOG_LEVEL"
+  },
+  "Database": {
+    "server": "SQL_SERVER",
+    "name": "SQL_SERVER_DATABASE_NAME",
+    "user": "SQL_SERVER_USERNAME",
+    "password": "SQL_SERVER_PASSWORD",
+    "logging": {
+      "__name": "DATABASE_LOGGING",
+      "__format": "json"
+    }
+  }
+}

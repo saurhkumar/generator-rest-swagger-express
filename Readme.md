@@ -4,7 +4,17 @@
 
 ## About The Project
 
-RESTful API generator with swagger integration using NodeJS, Express. It supports SQL and Non-CRUD options now, but other databases support is on the way
+RESTful API generator with swagger integration using NodeJS and Express.
+
+## Supported Backend
+
+Following backends are supported
+
+- [x] Non-CRUD (Without any database, just simple get call)
+- [x] MongoDB
+- [x] MYSQL
+
+It supports SQL and options now, but other databases support is on the way
 
 <!-- GETTING STARTED -->
 
@@ -22,8 +32,6 @@ This section list all major frameworks/libraries used in this project.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project
 
 ### Prerequisites
 
@@ -44,7 +52,18 @@ Go to your command-line interface and type `npm install -g yo generator-rest-swa
 
 ## Usage
 
-Go to your command-line interface and type `yo rest-swagger-express` and answer the prompts.
+Go to your command-line interface and type `yo rest-swagger-express` and answer the prompts.  
+If the generator is installed correctly, your prompt should looks :
+
+```
+$ yo rest-swagger-express
+? Your service name myApp
+? Your service description myApp rest interface
+? Your service version 0.0.0
+? Select application type CRUD
+? Object name User
+? Select your application backend MongoDB
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -130,11 +149,13 @@ Once you run test cases (using the command `npm test`), a /unittest.log file wil
 ## Roadmap
 
 - [x] Add basic test cases
-- [ ] Add correlationId to every log
-- [ ] Add projection support
+- [x] Add MongoDB support
+- [ ] Health check Api's
+- [ ] Add [correlationId](https://microsoft.github.io/code-with-engineering-playbook/observability/correlation-id/) to every log
+- [ ] Add projection and sort support
 - [ ] Add pagination and projection test cases
+- [ ] Add [Observability tools](https://www.baeldung.com/distributed-systems-observability)
 - [ ] Add Cassandra DB support
-- [ ] Add MongoDB support
 
 <!-- CONTRIBUTING -->
 

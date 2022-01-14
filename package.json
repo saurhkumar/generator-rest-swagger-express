@@ -1,7 +1,7 @@
 {
   "name": "generator-rest-swagger-express",
-  "version": "0.1.1",
-  "description": "RESTful API generator with swagger integration using NodeJS, Express. Supports MYSQL",
+  "version": "0.1.2",
+  "description": "RESTful API generator with swagger integration using NodeJS, Express",
   "author": "Saurabh Kumar <saurabhkumar.spsu@gmail.com>",
   "license": "(ISC) MIT",
   "files": [
@@ -15,7 +15,12 @@
     "yeoman-generator",
     "swagger",
     "SQL",
-    "REST"
+    "REST",
+    "express",
+    "mongoDB",
+    "mocha",
+    "pagination",
+    "swagger-ui"
   ],
   "dependencies": {
     "glob": "^7.2.0",
