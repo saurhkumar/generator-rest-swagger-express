@@ -1,0 +1,14 @@
+{
+  "App": {
+    "port": "APP_PORT"
+  },
+  "Log": {
+    "level": "LOG_LEVEL"
+  },
+  "Database": {
+    "server": "MONGODB_SERVER",
+    "name": "MONGODB_DATABASE_NAME",
+    "user": "MONGODB_USER",
+    "password": "MONGODB_PASSWORD"
+  }
+}

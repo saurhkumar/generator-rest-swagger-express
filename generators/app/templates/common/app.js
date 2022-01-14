@@ -22,7 +22,7 @@ module.exports = {
 app.use(cors());
 
 app.use(function (req, res, next) {
-  logger.info(`Start ${req.url}`, { method: req.method });
+  logger.info(`${req.url}`, { method: req.method, action: 'Start' });
   next();
 });
 
@@ -60,19 +60,19 @@ app.use(
 app.use(
   OpenApiValidator.middleware({
     apiSpec: `${__dirname}/api/swagger/swagger.json`,
-    // validateRequests: true, // (default)
     validateRequests: {
       allowUnknownQueryParameters: false
-    }, // (default)
+    },
     validateResponses: false // false by default
   })
 );
 
 // eslint-disable-next-line no-unused-vars
 app.use(function (err, req, res, next) {
-  logger.info(`End ${req.url}`, {
+  logger.info(`${req.url}`, {
     statusCode: res.statusCode,
-    method: req.method
+    method: req.method,
+    action: 'End'
   });
   res.status(err.status || 500).json({
     message: err.message,
@@ -82,9 +82,10 @@ app.use(function (err, req, res, next) {
 
 app.use(function (req, res, next) {
   res.on('finish', function () {
-    logger.info(`End ${req.url}`, {
+    logger.info(`${req.url}`, {
       statusCode: res.statusCode,
-      method: req.method
+      method: req.method,
+      action: 'End'
     });
   });
   next();

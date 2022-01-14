@@ -1,4 +1,4 @@
-const model = require('../model/model');
+const model = require('../models/model');
 module.exports = {
   get<%= objectName %>: get<%= objectName %>,
   create<%= objectName %>: create<%= objectName %>,
