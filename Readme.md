@@ -123,8 +123,9 @@ Once you run test cases (using the command `npm test`), a /unittest.log file wil
    ```
      "paths": {
        "/newPath": {
-         "x-controller": "yourController",
+         "x-controller": "yourControllerFile", <---- this is a controller file name under /api/controllers
          "get": {
+             "operationId": "yourFunctionName",  <---- this is a function name in the yourControllerFile
              ...
            }
          }
@@ -133,7 +134,7 @@ Once you run test cases (using the command `npm test`), a /unittest.log file wil
 
    To know more about the swagger path definition see [official docs](https://swagger.io/specification)
 
-2. Add controller in `api/controllers` directory.
+2. Add controller file `yourControllerFile` in `api/controllers` directory and function `yourFunctionName`.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
