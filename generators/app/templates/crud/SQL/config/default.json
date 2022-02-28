@@ -15,6 +15,13 @@
     "password": "admin",
     "logging": false
   },
+  "Caching": {
+    "memory": {
+      "msTTL": 100000,
+      "checkPeriod": 100,
+      "maxKeys": 100000
+    }
+  },
   "Unittest": {
     "Database": {
       "server": "localhost",

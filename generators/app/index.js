@@ -100,7 +100,9 @@ module.exports = class extends Generator {
         }
       );
     } else {
-      // copy files
+      // copy common files
+      let dbModel =
+        this.answers.appBackend == 'MySQL' ? 'sqlModel' : 'mongoDbModel';
       this.fs.copyTpl(
         glob.sync(this.templatePath('crud/common/**/*')),
         this.destinationPath(),
@@ -111,7 +113,8 @@ module.exports = class extends Generator {
           objectName: this._capitalizeFirstLetter(this.answers.objectName),
           objectNameLowerCase: this._lowerCaseFirstLetter(
             this.answers.objectName
-          )
+          ),
+          dbModel: dbModel
         }
       );
 

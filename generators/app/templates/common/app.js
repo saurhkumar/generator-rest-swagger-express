@@ -122,6 +122,6 @@ if (require.main === module) {
   app.listen(port, async () => {
     logger.info(`Example app listening at http://localhost:${port}`);
     logger.info(`Starting background services`);
-    await syncService.start();
+    await syncService.start(config.Database);
   });
 }

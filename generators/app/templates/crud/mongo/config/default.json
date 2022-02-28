@@ -15,6 +15,13 @@
     "password": "",
     "logging": false
   },
+  "Caching": {
+    "memory": {
+      "msTTL": 100000,
+      "checkPeriod": 100,
+      "maxKeys": 100000
+    }
+  },
   "Unittest": {
     "Database": {
       "server": "mongodb://localhost:27017",

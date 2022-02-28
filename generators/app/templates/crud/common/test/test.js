@@ -15,7 +15,7 @@ describe('<%= objectName %>Service', async function () {
   let port = Math.floor(Math.random() * 10000);
   before(async function () {
     // initialize middle ware - DB connect
-    await App.start();
+    await App.start(config.Database);
     request = supertest.agent(App.app).host(`http://localhost:${port}`).set({
       'X-Correlation-Id': shortId.generate(),
       'Content-Type': 'application/json'
