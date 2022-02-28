@@ -151,6 +151,7 @@ Once you run test cases (using the command `npm test`), a /unittest.log file wil
 
 - [x] Add basic test cases
 - [x] Add MongoDB support
+- [x] Add in-memory cache support
 - [ ] Health check Api's
 - [ ] Add [correlationId](https://microsoft.github.io/code-with-engineering-playbook/observability/correlation-id/) to every log
 - [ ] Add projection and sort support

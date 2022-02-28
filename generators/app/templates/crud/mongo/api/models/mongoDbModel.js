@@ -1,26 +1,35 @@
-const config = require('config');
+const mongoose = require('mongoose');
+
+const mongoHelper = require('../helpers/mongoHelper');
 
 const logger = require('../../logger')(__filename);
-const { DataTypes } = require('sequelize');
-const sqlHelper = require('../helpers/mysqlHelper');
 const shortId = require('../helpers/shortId');
-const sequelize = sqlHelper.connect(config.Database);
 
-const <%= objectName %> = sequelize.define(
-  '<%= objectName %>',
+const <%= objectNameLowerCase %>Schema = new mongoose.Schema(
   {
-    id: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      defaultValue: shortId.generate
-    },
-    name: { type: DataTypes.STRING, allowNull: false },
-    age: { type: DataTypes.SMALLINT, allowNull: false },
-    address: { type: DataTypes.STRING, allowNull: false },
-    country: { type: DataTypes.STRING, allowNull: true }
+    _id: String,
+    name: String,
+    age: Number,
+    address: String,
+    country: String
   },
-  { timestamps: true, version: true }
+  {
+    minimize: false,
+    timestamps: true,
+    versionKey: '__v',
+    id: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      }
+    }
+  }
 );
+
+const <%= objectName %> = mongoose.model('<%= objectName %>', <%= objectNameLowerCase %>Schema);
 
 module.exports = {
   get<%= objectName %>: get<%= objectName %>,
@@ -29,26 +38,18 @@ module.exports = {
   delete<%= objectName %>: delete<%= objectName %>,
   get<%= objectName %>s: get<%= objectName %>s,
   delete<%= objectName %>s: delete<%= objectName %>s,
-  start: start,
-  close: close
+  copy: copy,
+  start: mongoHelper.connect,
+  close: mongoHelper.close
 };
 
-async function start() {
-  // create table if not exist
-  await User.sync();
-}
-
-async function close() {
-  // close connection
-  await sequelize.close();
-}
-
 async function get<%= objectName %>(id) {
-  return await <%= objectName %>.findByPk(id);
+  return await <%= objectName %>.findById(id);
 }
 
 async function create<%= objectName %>(<%= objectNameLowerCase %>) {
   const <%= objectNameLowerCase %>Data = await <%= objectName %>.create({
+    _id: shortId.generate(),
     name: <%= objectNameLowerCase %>.name,
     age: <%= objectNameLowerCase %>.age,
     address: <%= objectNameLowerCase %>.address
@@ -58,7 +59,7 @@ async function create<%= objectName %>(<%= objectNameLowerCase %>) {
 }
 
 async function update<%= objectName %>(id, <%= objectNameLowerCase %>) {
-  let result = await <%= objectName %>.findByPk(id);
+  let result = await <%= objectName %>.findById(id);
   if (!result) {
     logger.error(`update<%= objectName %>: <%= objectNameLowerCase %>Id ${id} not found`);
     return null;
@@ -67,31 +68,34 @@ async function update<%= objectName %>(id, <%= objectNameLowerCase %>) {
   if (<%= objectNameLowerCase %>.address) result.address = <%= objectNameLowerCase %>.address;
   if (<%= objectNameLowerCase %>.name) result.name = <%= objectNameLowerCase %>.name;
   logger.debug(`update<%= objectName %>: updated <%= objectNameLowerCase %>: ${JSON.stringify(<%= objectNameLowerCase %>)}`);
-  await result.save();
-  return <%= objectNameLowerCase %>;
+  return await result.save();
 }
 
 async function delete<%= objectName %>(id) {
-  let result = await <%= objectName %>.destroy({ where: { id: id } });
-  if (result != 1) {
+  let result = await <%= objectName %>.deleteOne({ _id: id });
+  if (result.deletedCount != 1) {
     logger.error(`delete<%= objectName %>: <%= objectNameLowerCase %>Id ${id} not found`);
     return false;
   }
   return true;
 }
 async function get<%= objectName %>s(top, skip) {
-  const result = await <%= objectName %>.findAndCountAll({
-    where: {},
-    limit: top,
-    offset: skip
+  const result = await <%= objectName %>.find({}, [], {
+    limit: top, // number of top document return
+    skip: skip // number of doc to skip
   });
+  const totalDoc = (await <%= objectName %>.count({}).lean()) - skip;
   return {
-    count: result.count,
-    values: result.rows
+    count: totalDoc,
+    values: result
   };
 }
 
 async function delete<%= objectName %>s() {
-  let result = await <%= objectName %>.destroy({ where: {} });
+  let result = await <%= objectName %>.deleteMany({});
   return { count: result };
+}
+
+function copy(dbObj) {
+  return dbObj.toJSON();
 }
