@@ -14,7 +14,7 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'serviceName',
-        message: 'Your service name',
+        message: 'Your service name. Do not use any special characters',
         default: 'User'
       },
       {
@@ -71,7 +71,10 @@ module.exports = class extends Generator {
 
   writing() {
     this.destinationRoot(
-      path.join(this.destinationRoot(), '/' + this.answers.serviceName)
+      path.join(
+        this.destinationRoot(),
+        '/' + this._lowerCaseFirstLetter(this.answers.serviceName)
+      )
     );
     // for common files
     this.fs.copyTpl(
