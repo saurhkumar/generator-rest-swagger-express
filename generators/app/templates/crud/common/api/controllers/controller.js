@@ -1,5 +1,6 @@
 const service = require('../services/service');
 const logger = require('../../logger')(__filename);
+const queryHelper = require('../helpers/queryHelper');
 module.exports = {
   get<%= objectName %>: get<%= objectName %>,
   create<%= objectName %>: create<%= objectName %>,
@@ -8,10 +9,14 @@ module.exports = {
   get<%= objectName %>s: get<%= objectName %>s,
   delete<%= objectName %>s: delete<%= objectName %>s
 };
-
+// <% if (appBackend =="MongoDB") { %>
+//   private String "this is just for test mongoDB";
+//   <% } else { %>
+//   private String "this is just for test DQL";
+//   <% } %>
 async function get<%= objectName %>(req, res) {
   try {
-    const result = await service.get<%= objectName %>(req.params.id);
+    let result = await service.get<%= objectName %>(req.params.id);
     if (!result) return res.status(404).send({ message: 'Not Found' });
     return res.json(result);
   } catch (error) /* istanbul ignore next */ {
@@ -66,7 +71,16 @@ async function delete<%= objectName %>(req, res) {
 
 async function get<%= objectName %>s(req, res) {
   try {
-    const result = await service.get<%= objectName %>s(req.query.$top, req.query.$skip);
+    let fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    let result = await service.get<%= objectName %>s(
+      req.query.$top,
+      req.query.$skip,
+      req.query.$filter,
+      req.query.$sortBy,
+      req.query.$projection
+    );
+    const links = queryHelper.generatePaginationLinks(fullUrl, result.count);
+    result = { ...result, ...links };
     return res.json(result);
   } catch (error) /* istanbul ignore next */ {
     logger.error(`get<%= objectName %>s: Error while get<%= objectName %>s: ${error}`);
@@ -79,7 +93,7 @@ async function get<%= objectName %>s(req, res) {
 
 async function delete<%= objectName %>s(req, res) {
   try {
-    const result = await service.delete<%= objectName %>s();
+    const result = await service.delete<%= objectName %>s(req.query.$filter);
     return res.json(result);
   } catch (error) /* istanbul ignore next */ {
     logger.error(`create<%= objectName %>: Error while get<%= objectName %>s: ${error}`);

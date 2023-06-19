@@ -4,7 +4,9 @@
 
 ## About The Project
 
-RESTful API generator with swagger integration using NodeJS and Express.
+RESTful API generator with swagger integration using NodeJS and Express. This project generates afull fledge rest app powered by express. The idea of this project
+is to bring up your microservices fast, with inbuilt request validations, connection to the database and fully working rest APIs To see all the application
+features, see [feature](#service-features) section:  
 
 ## Supported Backend
 
@@ -14,7 +16,7 @@ Following backends are supported
 - [x] MongoDB
 - [x] MYSQL
 
-It supports SQL and options now, but other databases support is on the way
+It supports SQL and MongoDB now, but other databases support is on the way
 
 <!-- GETTING STARTED -->
 
@@ -28,6 +30,7 @@ This section list all major frameworks/libraries used in this project.
 - [Swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express)
 - [Config](https://github.com/lorenwest/node-config)
 - [Mocha](https://mochajs.org/)
+- and many more
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -42,7 +45,7 @@ This section list all major frameworks/libraries used in this project.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Installation
+### How to install
 
 Go to your command-line interface and type `npm install -g yo generator-rest-swagger-express`
 
@@ -50,7 +53,7 @@ Go to your command-line interface and type `npm install -g yo generator-rest-swa
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+## How to generate micro service
 
 Go to your command-line interface and type `yo rest-swagger-express` and answer the prompts.  
 If the generator is installed correctly, your prompt should looks :
@@ -65,6 +68,7 @@ $ yo rest-swagger-express
 ? Select your application backend MongoDB
 ```
 
+Once all the prompts are done, a new micro-service will be generated under name `myApp`. To see all the generated app feature, check
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Generated Application Details
@@ -98,11 +102,105 @@ Usually your generated project directory should like this:
  | |-test.js
 ```
 
-1. **app.js** : This is the entry point of your application, it has logic to start  
-   database connection, background process, initialize middleware and so.
-2. **syncService.js** : You can add a background process, that you want to trigger when the application starts
+Here is a detailed description of most of the files  
+
+`app.js` This is a starting point of the application, initializing the validations and swagger UI, all of the REST API path (using `/api/swagger/swagger.json`)
+
+`.eslintrc.js` This file contain all [linting](https://eslint.org/) rules for this project  
+
+`.prettierrc.json` This file contain all [Prettier](https://prettier.io/) rules for this project
+
+`logger.js` This is a wrapper around [Winston](https://www.npmjs.com/package/winston)  
+
+`/api/controllers/*` This directory has all the controllers. These controllers are to format your request and response.  
+
+The `metricController` is exposing the [Prometheus](https://prometheus.io/) data via `/metrics` end point. If you want to see some example charts, explore the `metric` directory at the root level
+
+`/api/serivce/*` This directory has all the services. Every rest end point has its own serivce function that can be used to add business logic or to interact with external services.  
+
+The sync service (`/api/services/syncService.js`) initilize the database connecton, apart from that, it can be used to start a background process.  
+
+For rest of the files, generate the app and see the application Readme
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Service Features -->
+## Service Features
+
+This service has out of the box support [sorting](#sorting), [filter](#filter), [projection](#projection) and [pagination](#pagination), background tasks, [Metrics](#metrics)  
+Assuming this service have `name, age, address, country` fields in the the schema. Then following features are available  
+
+<!-- Sorting -->
+## Sorting
+
+In the get request, documents can sorted `$sortBy` parameter. Documents can be sorted in both ascending and descending direction. Ex: `+age -name` to sort the documents by age in ascending order and name is descending order.  
+To control what fields you can sort, go to `/api/helpers/queryHooks.js` and inside the `mapping` function modify the `sortFields` keys. Assuming, you want to enable `name` and `age` sorting, then the sortField in the mapping function will be like:
+
+```
+  ...
+  function mapping() {
+    return {
+      sortFields: ['name', 'age'],
+  ...
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Filter -->
+## Filter
+
+Documents can be filtered using the parameter `$filter` by writing SQL-like statements. For example, to get all documents where the age is in ['23', '45'] and address = 'address1', the parameter `$filter` should be like `age in ( '23', '45') and address = 'address1'`.  
+Here one thing to note down is the quotes (`''`) around all the values, these quotes are always required, for every value. Right now `integer`, `string`, `boolean`, and `date` data types are supported. To add more data type support, see `/api/helpers/mongoFilter.pegjs` file. For more examples see filter test cases.  
+
+To control what fields you can filter, go to `/api/helpers/queryHooks.js` and inside the `mapping` function modify the `queryFields` keys. Assuming, you want to enable `name` and `age` filter, then the queryFields in the mapping function will be like:
+
+```
+  ...
+  function mapping() {
+    ...
+      queryFields: [
+        { name: 'name', type: 'string' },
+        { name: 'age', type: 'int' }
+      ],
+    ...
+  ...
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Projection -->
+## Projection
+
+Projection is a way to select only the necessary data rather than selecting every column. Use the `$projection` parameter to define the projection fields. Assuming you want to get only `age` and `name` out of all the available columns in the database, then the `$projection` parameter will be like `age name`. For more examples see filter test cases.  
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Pagination -->
+## Pagination
+
+ By Default applications exposes, pagination parameters [$top](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#982-client-driven-paging) and [$skip](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#982-client-driven-paging).
+
+ <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Pagination -->
+## Swagger UI
+
+ To visualize and interact with the API’s resources go to ["http://localhost:3000/user-service/docs"](http://localhost:3000/user-service/docs/#/)
+
+ <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Request and response validation -->
+## Request and response validation
+
+Define your request body or request parameter in the swagger file (`api/swagger/swagger.json`). To know more about the definitions, see [Swagger Documentation](https://swagger.io/specification/). According to the definitions defined in the swagger, all the validations will be performed.
+
+ <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Application Metrics -->
+## Metrics
+
+All the application metrics like CPU usages, event lag delay, TPM, and p95 are available.
+For more details, see your generated application
 
 ### Configuration Management
 
@@ -149,15 +247,10 @@ Once you run test cases (using the command `npm test`), a /unittest.log file wil
 
 ## Roadmap
 
-- [x] Add basic test cases
-- [x] Add MongoDB support
-- [x] Add in-memory cache support
-- [ ] Health check Api's
 - [ ] Add [correlationId](https://microsoft.github.io/code-with-engineering-playbook/observability/correlation-id/) to every log
-- [ ] Add projection and sort support
-- [ ] Add pagination and projection test cases
 - [ ] Add [Observability tools](https://www.baeldung.com/distributed-systems-observability)
 - [ ] Add Cassandra DB support
+- [ ] Add SSE support
 
 <!-- CONTRIBUTING -->
 

@@ -1,8 +1,9 @@
 {
   "App": {
-    "name": "<%= serviceName %>",
-    "v1Path": "/v1/<%= serviceName %>",
-    "port": 3000
+    "name": "<%= serviceName %>-service",
+    "port": 3000,
+    "validateResponses": false,
+    "allowUnknownQueryParameters": false
   },
   "Log": {
     "level": "debug",

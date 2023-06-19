@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const mongoHelper = require('../helpers/mongoHelper');
+const queryHelper = require('../helpers/queryHelper');
 
 const logger = require('../../logger')(__filename);
 const shortId = require('../helpers/shortId');
@@ -8,10 +9,12 @@ const shortId = require('../helpers/shortId');
 const <%= objectNameLowerCase %>Schema = new mongoose.Schema(
   {
     _id: String,
-    name: String,
-    age: Number,
-    address: String,
-    country: String
+    name: { type: String, index: true },
+    age: { type: Number, index: true },
+    address: { type: String, index: true },
+    country: { type: String, index: true },
+    isActive: { type: Boolean, index: true },
+    metadata: { type: Object, index: true }
   },
   {
     minimize: false,
@@ -52,7 +55,10 @@ async function create<%= objectName %>(<%= objectNameLowerCase %>) {
     _id: shortId.generate(),
     name: <%= objectNameLowerCase %>.name,
     age: <%= objectNameLowerCase %>.age,
-    address: <%= objectNameLowerCase %>.address
+    address: <%= objectNameLowerCase %>.address,
+    country: <%= objectNameLowerCase %>.country,
+    isActive: <%= objectNameLowerCase %>.isActive,
+    metadata: <%= objectNameLowerCase %>.metadata
   });
   logger.debug(`create<%= objectName %>: creating <%= objectNameLowerCase %>: ${JSON.stringify(<%= objectNameLowerCase %>)}`);
   return <%= objectNameLowerCase %>Data;
@@ -67,6 +73,8 @@ async function update<%= objectName %>(id, <%= objectNameLowerCase %>) {
   if (<%= objectNameLowerCase %>.age) result.age = <%= objectNameLowerCase %>.age;
   if (<%= objectNameLowerCase %>.address) result.address = <%= objectNameLowerCase %>.address;
   if (<%= objectNameLowerCase %>.name) result.name = <%= objectNameLowerCase %>.name;
+  if (<%= objectNameLowerCase %>.isActive != undefined) result.isActive = <%= objectNameLowerCase %>.isActive;
+  if (<%= objectNameLowerCase %>.metadata) result.metadata = <%= objectNameLowerCase %>.metadata;
   logger.debug(`update<%= objectName %>: updated <%= objectNameLowerCase %>: ${JSON.stringify(<%= objectNameLowerCase %>)}`);
   return await result.save();
 }
@@ -79,21 +87,39 @@ async function delete<%= objectName %>(id) {
   }
   return true;
 }
-async function get<%= objectName %>s(top, skip) {
-  const result = await <%= objectName %>.find({}, [], {
+async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
+  const sortConfig = queryHelper.transformSortBy(sortBy);
+  const filterConfig = queryHelper.transformQuery(filter);
+  const projectionConfig = queryHelper.transFormProjection(projection);
+
+  logger.info(
+    `get<%= objectName %>s: getting <%= objectName %>, top: ${top}, skip: ${skip}, filter: ${filter}, sortBy: ${sortConfig}, projection: ${projection}`
+  );
+
+  const result = await <%= objectName %>.find(filterConfig, [], {
     limit: top, // number of top document return
     skip: skip // number of doc to skip
-  });
-  const totalDoc = (await <%= objectName %>.count({}).lean()) - skip;
+  })
+    .sort(sortConfig)
+    .select(projectionConfig);
+
+  // move this to pagination
+  let totalDoc = await <%= objectName %>.countDocuments(filterConfig).lean(); // potential sol : use $facet
   return {
     count: totalDoc,
     values: result
   };
 }
 
-async function delete<%= objectName %>s() {
-  let result = await <%= objectName %>.deleteMany({});
-  return { count: result };
+async function delete<%= objectName %>s(filter) {
+  const filterConfig = queryHelper.transformQuery(filter);
+  logger.info(
+    `delete<%= objectName %>s: removing all <%= objectName %>s, for query: ${JSON.stringify(
+      filterConfig
+    )}`
+  );
+  let result = await <%= objectName %>.deleteMany(filterConfig);
+  return { count: result.deletedCount };
 }
 
 function copy(dbObj) {

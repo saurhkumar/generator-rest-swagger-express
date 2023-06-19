@@ -1,13 +1,5 @@
-const LRUCache = require('lru-cache');
-const config = require('config');
-
-const myCache = new LRUCache({
-  ttl: config.Caching.memory.msTTL,
-  updateAgeOnHas: true,
-  updateAgeOnGet: true,
-  max: config.Caching.memory.maxKeys
-});
-
+/* eslint-disable no-unused-vars */
+// place holder for your distributed cache system, implement or use any cloud service
 module.exports = {
   getObject: getObject,
   createObject: createObject,
@@ -17,22 +9,21 @@ module.exports = {
 };
 
 function getObject(key) {
-  return myCache.get(key); // undefine if miss
+  return undefined;
 }
 
 function createObject(key, value) {
-  return myCache.set(key, value);
+  return undefined;
 }
 
 function deleteObject(key) {
-  return myCache.delete(key);
+  return undefined;
 }
 
 function updateObject(key, value) {
-  deleteObject(key);
-  return createObject(key, value);
+  return undefined;
 }
 
 function clear() {
-  myCache.clear();
+  return undefined;
 }

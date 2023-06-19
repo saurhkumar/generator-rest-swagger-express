@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "/v1/<%= serviceName %>"
+      "url": "/v1/<%= serviceName %>-service"
     }
   ],
   "paths": {
