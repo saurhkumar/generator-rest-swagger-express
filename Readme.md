@@ -4,6 +4,8 @@
 
 ## About The Project
 
+Note: If you wanted to see how generated application will look like see [mongoDB base user-service](https://github.com/saurhkumar/mongoCrud) and [SQL based user-service](https://github.com/saurhkumar/sqlCrud)
+
 RESTful API generator with swagger integration using NodeJS and Express. This project generates afull fledge rest app powered by express. The idea of this project
 is to bring up your microservices fast, with inbuilt request validations, connection to the database and fully working rest APIs To see all the application
 features, see [feature](#service-features) section:  

@@ -1,9 +1,13 @@
+const logger = require('../../logger')(__filename);
 const queryHooks = require('../helpers/queryHooks');
+const filter = require('./mongoFilter');
+
 const allowedSortFields = new Set(queryHooks.mapping().sortFields);
 
 module.exports = {
   transformSortBy: transformMongoSortBy,
-  transformProjection: transformMongoProjection
+  transformProjection: transformMongoProjection,
+  transformFilterQuery: transformFilterQuery
 };
 
 function transformMongoSortBy(sortBy) {
@@ -36,6 +40,7 @@ function transformMongoSortBy(sortBy) {
     });
   return sortConfig;
 }
+
 function transformMongoProjection(projection) {
   if (!projection) {
     return '';
@@ -53,4 +58,20 @@ function transformMongoProjection(projection) {
       }
     });
   return projection;
+}
+
+function transformFilterQuery(query) {
+  let transformedQuery = {};
+  if (query) {
+    try {
+      transformedQuery = filter.parse(query);
+    } catch (error) {
+      const messaage = error.message || 'bad query';
+      logger.error(
+        `transformQuery: error while parsing query, error: ${messaage}`
+      );
+      throw { messaage: messaage, statusCode: 400 };
+    }
+  }
+  return transformedQuery;
 }

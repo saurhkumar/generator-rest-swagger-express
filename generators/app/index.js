@@ -83,14 +83,23 @@ module.exports = class extends Generator {
       {
         serviceName: this.answers.serviceName,
         description: this.answers.description,
-        version: this.answers.version
+        version: this.answers.version,
+        appBackend: this.answers.appBackend
       }
     );
 
     // for helpers
     this.fs.copyTpl(
       glob.sync(this.templatePath('helpers/**/*')),
-      this.destinationPath(`api/helpers`)
+      this.destinationPath(`api/helpers`),
+      {
+        serviceName: this.answers.serviceName,
+        description: this.answers.description,
+        version: this.answers.version,
+        appBackend: this.answers.appBackend,
+        objectName: this._capitalizeFirstLetter(this.answers.objectName),
+        objectNameLowerCase: this._lowerCaseFirstLetter(this.answers.objectName)
+      }
     );
 
     // for specific files

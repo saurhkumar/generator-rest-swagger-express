@@ -1,8 +1,17 @@
 // for live and readiness probe
+<% if (appBackend =="MongoDB") { %>
 const dbHelper = require('../helpers/mongoHelper');
+<% } else { %>
+const dbHelper = require('../helpers/sqlHelper');
+<% } %>
+
 const components = [
   {
-    name: 'mongoDB',
+<% if (appBackend =="MongoDB") { %>
+    name: 'mongoDB'
+<% } else { %>
+    name: 'sql-database'
+<% } %>,
     live: dbHelper.live,
     ready: dbHelper.ready
   }

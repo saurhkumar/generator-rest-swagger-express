@@ -2,8 +2,9 @@ const config = require('config');
 
 const logger = require('../../logger')(__filename);
 const { DataTypes } = require('sequelize');
-const sqlHelper = require('../helpers/mysqlHelper');
+const sqlHelper = require('../helpers/sqlHelper');
 const shortId = require('../helpers/shortId');
+const queryHelper = require('../helpers/SQLQueryHelper');
 const sequelize = sqlHelper.connect(config.Database);
 
 const <%= objectName %> = sequelize.define(
@@ -17,7 +18,18 @@ const <%= objectName %> = sequelize.define(
     name: { type: DataTypes.STRING, allowNull: false },
     age: { type: DataTypes.SMALLINT, allowNull: false },
     address: { type: DataTypes.STRING, allowNull: false },
-    country: { type: DataTypes.STRING, allowNull: true }
+    country: { type: DataTypes.STRING, allowNull: true },
+    isActive: { type: DataTypes.BOOLEAN, allowNull: true },
+    metadata: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      get: function () {
+        return JSON.parse(this.getDataValue('metadata'));
+      },
+      set: function (value) {
+        return this.setDataValue('metadata', JSON.stringify(value));
+      }
+    }
   },
   { timestamps: true, version: true }
 );
@@ -52,7 +64,10 @@ async function create<%= objectName %>(<%= objectNameLowerCase %>) {
   const <%= objectNameLowerCase %>Data = await <%= objectName %>.create({
     name: <%= objectNameLowerCase %>.name,
     age: <%= objectNameLowerCase %>.age,
-    address: <%= objectNameLowerCase %>.address
+    address: <%= objectNameLowerCase %>.address,
+    country: <%= objectNameLowerCase %>.country,
+    isActive: <%= objectNameLowerCase %>.isActive || false,
+    metadata: <%= objectNameLowerCase %>.metadata || {}
   });
   logger.debug(`create<%= objectName %>: creating <%= objectNameLowerCase %>: ${JSON.stringify(<%= objectNameLowerCase %>)}`);
   return <%= objectNameLowerCase %>Data;
@@ -67,6 +82,8 @@ async function update<%= objectName %>(id, <%= objectNameLowerCase %>) {
   if (<%= objectNameLowerCase %>.age) result.age = <%= objectNameLowerCase %>.age;
   if (<%= objectNameLowerCase %>.address) result.address = <%= objectNameLowerCase %>.address;
   if (<%= objectNameLowerCase %>.name) result.name = <%= objectNameLowerCase %>.name;
+  if (<%= objectNameLowerCase %>.isActive != undefined) result.isActive = <%= objectNameLowerCase %>.isActive;
+  if (<%= objectNameLowerCase %>.metadata) result.metadata = <%= objectNameLowerCase %>.metadata;
   logger.debug(`update<%= objectName %>: updated <%= objectNameLowerCase %>: ${JSON.stringify(<%= objectNameLowerCase %>)}`);
   await result.save();
   return <%= objectNameLowerCase %>;
@@ -80,21 +97,40 @@ async function delete<%= objectName %>(id) {
   }
   return true;
 }
-async function get<%= objectName %>s(top, skip) {
-  const result = await <%= objectName %>.findAndCountAll({
-    where: {},
-    limit: top,
-    offset: skip
+async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
+  const sortConfig = queryHelper.transformSortBy(sortBy);
+  const filterConfig = queryHelper.transformFilterQuery(filter);
+  const projectionConfig = queryHelper.transformProjection(projection);
+
+  let sqlDataQuery = `SELECT ${projectionConfig} from Users ${filterConfig} ${sortConfig} LIMIT ${top} OFFSET ${skip}`;
+  logger.info(`get<%= objectName %>s: getting <%= objectName %>s, query: ${sqlDataQuery}`);
+  const data = await sequelize.query(sqlDataQuery, {
+    type: 'SELECT'
+  });
+  let sqlCountQuery = `SELECT COUNT(*) as count from <%= objectName %>s ${filterConfig}`;
+  const count = await sequelize.query(sqlCountQuery, {
+    type: 'SELECT'
+  });
+  // fix metadata
+  data.forEach((element) => {
+    try {
+      element.metadata = JSON.parse(element.metadata);
+    } catch (error) {
+      element.metadata = {};
+      // log it
+    }
   });
   return {
-    count: result.count,
-    values: result.rows
+    count: count[0].count,
+    value: data
   };
 }
 
-async function delete<%= objectName %>s() {
-  let result = await <%= objectName %>.destroy({ where: {} });
-  return { count: result };
+async function delete<%= objectName %>s(filter) {
+  const filterConfig = queryHelper.transformFilterQuery(filter);
+  let sqlDataQuery = `DELETE from Users ${filterConfig}`;
+  const result = await sequelize.query(sqlDataQuery);
+  return { count: result[0].affectedRows };
 }
 
 function copy(dbObj) {

@@ -1,19 +1,17 @@
 const service = require('../services/service');
 const logger = require('../../logger')(__filename);
-const queryHelper = require('../helpers/queryHelper');
+
+const middlewares = require('../helpers/middlewares');
+const paginationHelper = require('../helpers/paginationHelper');
 module.exports = {
-  get<%= objectName %>: get<%= objectName %>,
-  create<%= objectName %>: create<%= objectName %>,
-  update<%= objectName %>: update<%= objectName %>,
-  delete<%= objectName %>: delete<%= objectName %>,
-  get<%= objectName %>s: get<%= objectName %>s,
-  delete<%= objectName %>s: delete<%= objectName %>s
+  get<%= objectName %>: middlewares.controllerMiddleware(get<%= objectName %>),
+  create<%= objectName %>: middlewares.controllerMiddleware(create<%= objectName %>),
+  update<%= objectName %>: middlewares.controllerMiddleware(update<%= objectName %>),
+  delete<%= objectName %>: middlewares.controllerMiddleware(delete<%= objectName %>),
+  get<%= objectName %>s: middlewares.controllerMiddleware(get<%= objectName %>s),
+  delete<%= objectName %>s: middlewares.controllerMiddleware(delete<%= objectName %>s)
 };
-// <% if (appBackend =="MongoDB") { %>
-//   private String "this is just for test mongoDB";
-//   <% } else { %>
-//   private String "this is just for test DQL";
-//   <% } %>
+
 async function get<%= objectName %>(req, res) {
   try {
     let result = await service.get<%= objectName %>(req.params.id);
@@ -79,7 +77,7 @@ async function get<%= objectName %>s(req, res) {
       req.query.$sortBy,
       req.query.$projection
     );
-    const links = queryHelper.generatePaginationLinks(fullUrl, result.count);
+    const links = paginationHelper.generatePaginationLinks(fullUrl, result.count);
     result = { ...result, ...links };
     return res.json(result);
   } catch (error) /* istanbul ignore next */ {

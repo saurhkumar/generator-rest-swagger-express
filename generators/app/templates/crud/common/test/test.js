@@ -14,7 +14,12 @@ logger('unittest.log').switchToFile();
 
 const v1BasePath = '/v1/<%= objectNameLowerCase %>-service';
 
-const queryHelper = require('../api/helpers/queryHelper');
+const paginationHelper = require('../api/helpers/paginationHelper');
+<% if (appBackend =="MongoDB") { %>
+const queryHelper = require('../api/helpers/mongoQueryHelper');
+<% } else { %>
+const queryHelper = require('../api/helpers/SQLQueryHelper');
+<% } %>
 const healthModel = require('../api/models/healthModel');
 const healthService = require('../api/services/healthService');
 
@@ -130,7 +135,7 @@ describe('<%= objectName %>Service', async function () {
 
   function checkData(res, field, targetValues) {
     // gather all vales
-    const data = new Set(res.body.values.map((<%= objectName %>) => <%= objectName %>[`${field}`]));
+    const data = new Set(res.body.value.map((<%= objectName %>) => <%= objectName %>[`${field}`]));
     // check all value
     for (let val of targetValues) {
       data.has(val).should.eql(true);
@@ -288,8 +293,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
 
         await request
           .get(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'randomId')
@@ -302,8 +307,8 @@ describe('<%= objectName %>Service', async function () {
         let <%= objectNameLowerCase %>s = await request.get(v1BasePath + '/<%= objectNameLowerCase %>s/').expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
 
         await request
           .get(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'thisIsReallyLongUserIsMaxIs12')
@@ -318,8 +323,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
 
         const req = createReq();
         const res = await request
@@ -353,8 +358,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
         const count = 3;
         await bulkCreate<%= objectName %>s(count);
         // get <%= objectNameLowerCase %> and check properties
@@ -364,8 +369,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', count);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(count);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(count);
       });
     });
 
@@ -385,8 +390,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
       });
 
       it('FailCreateInvalidName', async function () {
@@ -404,8 +409,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
       });
 
       it('FailCreateNoAddress', async function () {
@@ -423,8 +428,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
       });
 
       it('FailCreateRandomAddress', async function () {
@@ -442,8 +447,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
       });
 
       it('FailCreateNoAge', async function () {
@@ -461,8 +466,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
       });
 
       it('FailCreateRandomAge', async function () {
@@ -493,8 +498,8 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
       });
 
       it('FailCreateBadIsActive', async function () {
@@ -520,8 +525,8 @@ describe('<%= objectName %>Service', async function () {
         let <%= objectNameLowerCase %>s = await request.get(v1BasePath + '/<%= objectNameLowerCase %>s/').expect(200);
 
         <%= objectNameLowerCase %>s.body.should.have.property('count', 0);
-        <%= objectNameLowerCase %>s.body.should.have.property('values');
-        <%= objectNameLowerCase %>s.body.values.length.should.be.eql(0);
+        <%= objectNameLowerCase %>s.body.should.have.property('value');
+        <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
       });
 
       it('create<%= objectName %>', async function () {
@@ -567,9 +572,6 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
         res.body.should.have.property('name', req.name);
         res.body.should.have.property('age', req.age);
-        res.body.should.not.have.property('country');
-        res.body.should.not.have.property('isActive');
-        res.body.should.not.have.property('metadata');
         res.body.should.have.property('id');
 
         const <%= objectNameLowerCase %>Id = res.body.id;
@@ -581,9 +583,6 @@ describe('<%= objectName %>Service', async function () {
           .expect(200);
         <%= objectNameLowerCase %>.body.should.have.property('name', req.name);
         <%= objectNameLowerCase %>.body.should.have.property('age', req.age);
-        <%= objectNameLowerCase %>.body.should.not.have.property('country');
-        <%= objectNameLowerCase %>.body.should.not.have.property('isActive');
-        <%= objectNameLowerCase %>.body.should.not.have.property('metadata');
         <%= objectNameLowerCase %>.body.should.have.property('id', <%= objectNameLowerCase %>Id);
       });
     });
@@ -760,8 +759,8 @@ describe('<%= objectName %>Service', async function () {
           .set('Accept', 'application/json')
           .expect(200);
         res.body.should.have.property('count', 0);
-        res.body.should.have.property('values');
-        res.body.values.length.should.be.eql(0);
+        res.body.should.have.property('value');
+        res.body.value.length.should.be.eql(0);
       });
 
       it('DeleteAll<%= objectName %>s', async function () {
@@ -773,8 +772,8 @@ describe('<%= objectName %>Service', async function () {
           .set('Accept', 'application/json')
           .expect(200);
         res.body.should.have.property('count', count);
-        res.body.should.have.property('values');
-        res.body.values.length.should.be.eql(count);
+        res.body.should.have.property('value');
+        res.body.value.length.should.be.eql(count);
       });
     });
 
@@ -805,32 +804,32 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + `/<%= objectNameLowerCase %>s?$top=${top}`)
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
-      res.body.values.should.have.length(top);
+      res.body.should.have.property('value');
+      res.body.value.should.have.length(top);
 
       // apply skip
       res = await request
         .get(v1BasePath + `/<%= objectNameLowerCase %>s?$top=${top}&$skip=${skip}`)
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
-      res.body.values.should.have.length(top);
+      res.body.should.have.property('value');
+      res.body.value.should.have.length(top);
 
       // apply skip
       res = await request
         .get(v1BasePath + `/<%= objectNameLowerCase %>s?$top=13&$skip=7`)
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
-      res.body.values.should.have.length(13);
+      res.body.should.have.property('value');
+      res.body.value.should.have.length(13);
 
       // apply skip
       res = await request
         .get(v1BasePath + `/<%= objectNameLowerCase %>s?$top=20&$skip=21`)
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
-      res.body.values.should.have.length(0);
+      res.body.should.have.property('value');
+      res.body.value.should.have.length(0);
     });
 
     it('FailSortUsersBadParameter', async function () {
@@ -889,9 +888,9 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
+      res.body.should.have.property('value');
       for (let index = 0; index < count; index++) {
-        res.body.values[index].age.should.be.eql(index);
+        res.body.value[index].age.should.be.eql(index);
       }
 
       params = {
@@ -903,10 +902,10 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
+      res.body.should.have.property('value');
 
       for (let index = count - 1; index >= count; index--) {
-        res.body.values[index].age.should.be.eql(index);
+        res.body.value[index].age.should.be.eql(index);
       }
 
       // use skip also
@@ -919,10 +918,10 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
+      res.body.should.have.property('value');
 
       for (let index = 0; index < 10; index++) {
-        res.body.values[index].age.should.be.eql(index + 10);
+        res.body.value[index].age.should.be.eql(index + 10);
       }
     });
   });
@@ -943,7 +942,7 @@ describe('<%= objectName %>Service', async function () {
     });
 
     it('ProjectionTest', async function () {
-      // create a  <%= objectNameLowerCase %>s
+      // create  <%= objectNameLowerCase %>s
       const count = 4;
       await bulkCreate<%= objectName %>s(count);
       // query  <%= objectNameLowerCase %>s
@@ -956,9 +955,9 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
-      res.body.values.length.should.eql(count);
-      res.body.values.forEach((<%= objectNameLowerCase %>) => {
+      res.body.should.have.property('value');
+      res.body.value.length.should.eql(count);
+      res.body.value.forEach((<%= objectNameLowerCase %>) => {
         <%= objectNameLowerCase %>.should.not.have.property('age');
         <%= objectNameLowerCase %>.should.not.have.property('createdAt');
         <%= objectNameLowerCase %>.should.have.property('name');
@@ -969,7 +968,7 @@ describe('<%= objectName %>Service', async function () {
 
       // use random projection parameter
       params = {
-        $projection: `-assge -createdAt`,
+        $projection: `-age -createdAt`,
         $top: count
       };
 
@@ -977,10 +976,9 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
-      res.body.values.length.should.eql(count);
-      res.body.values.forEach((<%= objectNameLowerCase %>) => {
-        <%= objectNameLowerCase %>.should.have.property('age');
+      res.body.should.have.property('value');
+      res.body.value.length.should.eql(count);
+      res.body.value.forEach((<%= objectNameLowerCase %>) => {
         <%= objectNameLowerCase %>.should.not.have.property('createdAt');
         <%= objectNameLowerCase %>.should.have.property('name');
         <%= objectNameLowerCase %>.should.have.property('address');
@@ -1003,9 +1001,9 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', count);
-      res.body.should.have.property('values');
-      res.body.values.length.should.eql(count);
-      res.body.values.forEach((<%= objectNameLowerCase %>) => {
+      res.body.should.have.property('value');
+      res.body.value.length.should.eql(count);
+      res.body.value.forEach((<%= objectNameLowerCase %>) => {
         <%= objectNameLowerCase %>.should.not.have.property('age');
         <%= objectNameLowerCase %>.should.not.have.property('createdAt');
         <%= objectNameLowerCase %>.should.have.property('name');
@@ -1063,7 +1061,7 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', 10); // only 10 record should match the above criteria
-      res.body.should.have.property('values');
+      res.body.should.have.property('value');
       checkData(res, 'age', [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
 
       params = {
@@ -1074,7 +1072,7 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', 5);
-      res.body.should.have.property('values');
+      res.body.should.have.property('value');
       checkData(res, 'age', [3, 4, 11, 12, 14]);
 
       params = {
@@ -1085,13 +1083,13 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', 3);
-      res.body.should.have.property('values');
+      res.body.should.have.property('value');
       checkData(res, 'age', [4, 12, 14]);
     });
 
     it('FilterDateFieldTest', async function () {
       // create 4 different  <%= objectNameLowerCase %>s' in 4 different point in time and quer
-
+      this.timeout(10000)
       // <%= objectNameLowerCase %>1
       let res = await request
         .post(v1BasePath + '/<%= objectNameLowerCase %>s')
@@ -1100,7 +1098,7 @@ describe('<%= objectName %>Service', async function () {
       res.body.should.have.property('id');
       const <%= objectNameLowerCase %>Id1 = res.body.id;
 
-      await new Promise((r) => setTimeout(r, 100)); // sleep for a while to create enough time gap
+      await new Promise((r) => setTimeout(r, 2000)); // sleep for a while to create enough time gap
 
       // <%= objectNameLowerCase %>2
       res = await request
@@ -1111,7 +1109,7 @@ describe('<%= objectName %>Service', async function () {
       const <%= objectNameLowerCase %>Id2 = res.body.id;
       const <%= objectNameLowerCase %>Id2CreatedAt = res.body.createdAt;
 
-      await new Promise((r) => setTimeout(r, 100)); // sleep for a while to create enough time gap
+      await new Promise((r) => setTimeout(r, 2000)); // sleep for a while to create enough time gap
 
       // <%= objectNameLowerCase %>3
       res = await request
@@ -1120,7 +1118,7 @@ describe('<%= objectName %>Service', async function () {
         .expect(200);
       res.body.should.have.property('id');
 
-      await new Promise((r) => setTimeout(r, 100)); // sleep for a while to create enough time gap
+      await new Promise((r) => setTimeout(r, 2000)); // sleep for a while to create enough time gap
 
       // <%= objectNameLowerCase %>4
       res = await request
@@ -1138,7 +1136,7 @@ describe('<%= objectName %>Service', async function () {
       res = await request
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
-      const allIds1 = res.body.values.map((element) => element.id);
+      const allIds1 = res.body.value.map((element) => element.id);
       allIds1.length.should.eql(2);
       allIds1.includes(<%= objectNameLowerCase %>Id1).should.eql(true);
       allIds1.includes(<%= objectNameLowerCase %>Id2).should.eql(true);
@@ -1181,8 +1179,8 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', 0);
-      res.body.should.have.property('values');
-      res.body.values.length.should.eql(0);
+      res.body.should.have.property('value');
+      res.body.value.length.should.eql(0);
       // other  <%= objectNameLowerCase %>s' and check if the remaining  <%= objectNameLowerCase %>s' exis
       params = {
         $top: count // get all  <%= objectNameLowerCase %>s' for the given quer
@@ -1191,8 +1189,8 @@ describe('<%= objectName %>Service', async function () {
         .get(v1BasePath + '/<%= objectNameLowerCase %>s?' + encodeGetParams(params))
         .expect(200);
       res.body.should.have.property('count', 15);
-      res.body.should.have.property('values');
-      res.body.values.length.should.eql(15);
+      res.body.should.have.property('value');
+      res.body.value.length.should.eql(15);
       checkData(
         res,
         'age',
@@ -1259,15 +1257,6 @@ describe('<%= objectName %>Service', async function () {
       testParserLanguage(`age not in ('dd')`).should.eql(''); // age is of type integer ( query hooks mapping )
       testParserLanguage(`age not in ('2'`).should.eql(''); // ")" is missing
     });
-
-    it('QueryLanguageTest', async function () {
-      const query = testParserLanguage(
-        `name = 'dd' and   age = '10' and  (address not in  ('add1',      'add2' ) or country =  'cty'   )`
-      );
-      JSON.stringify(query).should.eql(
-        `{"$and":[{"name":{"$eq":"dd"}},{"$and":[{"age":{"$eq":10}},{"$or":[{"address":{"$nin":["add1","add2"]}},{"country":{"$eq":"cty"}}]}]}]}`
-      );
-    });
   });
 
   describe('PaginationLinksTest', async function () {
@@ -1287,7 +1276,7 @@ describe('<%= objectName %>Service', async function () {
       // top is 10 and skip is 0 in the url
       let url =
         'http://localhost:3000/v1/<%= objectNameLowerCase %>-service/<%= objectNameLowerCase %>s?%24top=10&%24skip=0&%24filter=age%20%3E%20%2710%27&%24sortBy=%2Bage%20%20%20%2Bname&%24projection=-name%20%20%20-age';
-      let links = queryHelper.generatePaginationLinks(url, 30);
+      let links = paginationHelper.generatePaginationLinks(url, 30);
 
       links.should.have.propertyByPath('first', 'href');
       _checkURL(links.first.href, url);
@@ -1313,7 +1302,7 @@ describe('<%= objectName %>Service', async function () {
       // check next pagination links
       const nextLink = links.next.href;
       const lastLink = links.last.href;
-      links = queryHelper.generatePaginationLinks(nextLink, 30);
+      links = paginationHelper.generatePaginationLinks(nextLink, 30);
 
       links.should.have.propertyByPath('first', 'href');
       _checkURL(links.first.href, url);

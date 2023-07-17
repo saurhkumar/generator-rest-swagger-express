@@ -17,8 +17,10 @@ function mapping() {
       { name: 'age', type: 'int' },
       { name: 'address', type: 'string' },
       { name: 'createdAt', type: 'date' },
+      { name: 'updatedAt', type: 'date' },
       { name: 'isActive', type: 'boolean' },
-      { name: 'country', type: 'string' }
+      { name: 'country', type: 'string' },
+      { name: 'id', type: 'string' }
     ],
     virtuals: [
       // TODO: Implement logic for this in the parser

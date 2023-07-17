@@ -1,32 +1,8 @@
 const querystring = require('querystring');
 
-const logger = require('../../logger')(__filename);
-
-const filter = require('./mongoFilter');
-const queryHelper = require('./mongoQueryHelper');
-
 module.exports = {
-  transformSortBy: queryHelper.transformSortBy,
-  transformQuery: transformQuery,
-  transFormProjection: queryHelper.transformProjection,
   generatePaginationLinks: generatePaginationLinks
 };
-
-function transformQuery(query) {
-  let transformedQuery = {};
-  if (query) {
-    try {
-      transformedQuery = filter.parse(query);
-    } catch (error) {
-      const messaage = error.message || 'bad query';
-      logger.error(
-        `transformQuery: error while parsing query, error: ${messaage}`
-      );
-      throw { messaage: messaage, statusCode: 400 };
-    }
-  }
-  return transformedQuery;
-}
 
 /**
  *

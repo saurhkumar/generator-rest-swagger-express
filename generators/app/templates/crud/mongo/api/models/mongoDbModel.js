@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const mongoHelper = require('../helpers/mongoHelper');
-const queryHelper = require('../helpers/queryHelper');
+const queryHelper = require('../helpers/mongoQueryHelper');
 
 const logger = require('../../logger')(__filename);
 const shortId = require('../helpers/shortId');
@@ -89,8 +89,8 @@ async function delete<%= objectName %>(id) {
 }
 async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
   const sortConfig = queryHelper.transformSortBy(sortBy);
-  const filterConfig = queryHelper.transformQuery(filter);
-  const projectionConfig = queryHelper.transFormProjection(projection);
+  const filterConfig = queryHelper.transformFilterQuery(filter);
+  const projectionConfig = queryHelper.transformProjection(projection);
 
   logger.info(
     `get<%= objectName %>s: getting <%= objectName %>, top: ${top}, skip: ${skip}, filter: ${filter}, sortBy: ${sortConfig}, projection: ${projection}`
@@ -107,12 +107,12 @@ async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
   let totalDoc = await <%= objectName %>.countDocuments(filterConfig).lean(); // potential sol : use $facet
   return {
     count: totalDoc,
-    values: result
+    value: result
   };
 }
 
 async function delete<%= objectName %>s(filter) {
-  const filterConfig = queryHelper.transformQuery(filter);
+  const filterConfig = queryHelper.transformFilterQuery(filter);
   logger.info(
     `delete<%= objectName %>s: removing all <%= objectName %>s, for query: ${JSON.stringify(
       filterConfig
