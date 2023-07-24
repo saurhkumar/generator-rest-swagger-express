@@ -1,6 +1,6 @@
 {
   "name": "generator-rest-swagger-express",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "RESTful API generator with swagger integration using NodeJS, Express",
   "author": "Saurabh Kumar <saurabhkumar.spsu@gmail.com>",
   "license": "(ISC) MIT",
