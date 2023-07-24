@@ -37,12 +37,12 @@ async function delete<%= objectName %>(id) {
   memoryCacheModel.deleteObject(id);
   return dbModel.delete<%= objectName %>(id);
 }
-async function get<%= objectName %>s(top, skip) {
-  let result = dbModel.get<%= objectName %>s(top, skip);
+async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
+  let result = dbModel.get<%= objectName %>s(top, skip, filter, sortBy, projection);
   return result;
 }
 
-async function delete<%= objectName %>s() {
+async function delete<%= objectName %>s(filter) {
   memoryCacheModel.clear();
-  return dbModel.delete<%= objectName %>s();
+  return dbModel.delete<%= objectName %>s(filter);
 }

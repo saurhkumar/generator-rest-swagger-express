@@ -23,10 +23,10 @@ async function delete<%= objectName %>(id) {
   return await model.delete<%= objectName %>(id);
 }
 
-async function get<%= objectName %>s(top, skip) {
-  return await model.get<%= objectName %>s(top, skip);
+async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
+  return await model.get<%= objectName %>s(top, skip, filter, sortBy, projection);
 }
 
-async function delete<%= objectName %>s() {
-  return await model.delete<%= objectName %>s();
+async function delete<%= objectName %>s(filter) {
+  return await model.delete<%= objectName %>s(filter);
 }

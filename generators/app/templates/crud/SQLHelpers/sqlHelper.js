@@ -1,7 +1,6 @@
 // Just for connection management
 
 const { Sequelize } = require('sequelize');
-
 class MYSQLHelper {
   constructor() {
     this.dbConfig = null;
@@ -26,6 +25,17 @@ class MYSQLHelper {
 
   async close() {
     await this.sequelize.close();
+  }
+
+  async live() {
+    return true;
+  }
+  async ready() {
+    // TODO Implement logic for the db liveness and readiness
+    return {
+      status: true,
+      message: `database connected, current database state `
+    };
   }
 }
 

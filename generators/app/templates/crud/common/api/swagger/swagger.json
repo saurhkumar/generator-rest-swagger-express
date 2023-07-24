@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "/v1/<%= serviceName %>"
+      "url": "/v1/<%= objectNameLowerCase %>-service"
     }
   ],
   "tags": [
@@ -17,6 +17,118 @@
     }
   ],
   "paths": {
+    "/metrics": {
+      "x-controller": "metricController",
+      "get": {
+        "tags": ["Application"],
+        "summary": "Get application metrics",
+        "operationId": "getMetrics",
+        "description": "Get all application metrics",
+        "x-dont-log": false,
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User information",
+            "content": {
+              "application/text": {
+                "schema": {
+                  "type": "string",
+                  "$ref": "#/components/schemas/Metrics"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/app/ready": {
+      "x-controller": "healthController",
+      "get": {
+        "tags": ["Application Health"],
+        "summary": "Get application ready",
+        "operationId": "getReady",
+        "description": "Get app ready status",
+        "x-dont-log": false,
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get app ready status to serve the traffic",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "$ref": "#/components/schemas/Ready"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "App is not healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "$ref": "#/components/schemas/Ready"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/app/live": {
+      "x-controller": "healthController",
+      "get": {
+        "tags": ["Application Health"],
+        "summary": "Get application live",
+        "operationId": "getLive",
+        "description": "Get app live status",
+        "x-dont-log": false,
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "live status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Live"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/<%= objectNameLowerCase %>s": {
       "x-controller": "controller",
       "get": {
@@ -47,6 +159,37 @@
               "maximum": 100,
               "minimum": 0,
               "default": 0
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter records using sql like where clause. For all the available clause see readme. \n For the allowed filter fields check your queryHooks file",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "$sortBy",
+            "in": "query",
+            "description": "This will sort documents by the database filed, default is no sort \n <br> Format is '+/-dbField'. '+' is for ascending and '-' is for descending order. <br> Ex '+age -name' will sort documents by age(ascending) and name(descending)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 30
+            }
+          },
+          {
+            "name": "$projection",
+            "in": "query",
+            "description": "Remove fields. Use '-' for removal. <br> EX: -name -age, will remove name and age ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
             }
           }
         ],
@@ -124,6 +267,18 @@
         "summary": "Delete <%= objectNameLowerCase %>",
         "description": "Delete all <%= objectNameLowerCase %>s",
         "operationId": "delete<%= objectName %>s",
+        "parameters": [
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Delete records using sql like where clause. For all the available clause see readme. \n For the allowed filter fields check your queryHooks file",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "counts",
@@ -169,7 +324,8 @@
             "description": "Id of <%= objectNameLowerCase %>",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 12
             }
           }
         ],
@@ -209,7 +365,8 @@
             "description": "Id of <%= objectNameLowerCase %>",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 12
             }
           }
         ],
@@ -264,7 +421,8 @@
             "description": "Id of <%= objectNameLowerCase %>",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 12
             }
           }
         ],
@@ -293,41 +451,46 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "<%= objectNameLowerCase %> id"
+            "description": "user id"
           },
           "name": {
             "type": "string",
-            "description": "<%= objectNameLowerCase %> name"
+            "description": "user name"
           },
           "address": {
             "type": "string",
-            "description": "<%= objectNameLowerCase %> address"
+            "description": "user address"
           },
           "country": {
             "type": "string",
-            "description": "<%= objectNameLowerCase %> country"
+            "description": "user country"
           },
           "age": {
             "type": "integer",
-            "description": "<%= objectNameLowerCase %> age"
+            "description": "user age"
           },
           "createdAt": {
             "type": "string",
-            "description": "<%= objectNameLowerCase %> creation timestamp"
+            "description": "user creation timestamp"
           },
           "updatedAt": {
             "type": "string",
-            "description": "<%= objectNameLowerCase %> update timestamp"
+            "description": "user update timestamp"
           },
-          "version": {
-            "type": "integer",
-            "description": "<%= objectNameLowerCase %> version"
+          "isActive": {
+            "type": "boolean",
+            "description": "user is active or not",
+            "example": false
+          },
+          "metadata": {
+            "type": "object",
+            "example": { "property1": 10 }
           }
         }
       },
       "<%= objectName %>s": {
         "type": "object",
-        "required": ["count", "value"],
+        "required": ["count", "value", "links", "last", "previous", "next"],
         "properties": {
           "count": {
             "type": "integer",
@@ -342,6 +505,54 @@
                 }
               ],
               "required": ["id", "name", "address", "age"]
+            }
+          },
+          "first": {
+            "type": "object",
+            "description": "pagination records first link",
+            "required": ["href"],
+            "properties": {
+              "href": {
+                "type": "string",
+                "description": "paginated data link",
+                "example": "http://localhost:3000/v1/<%= objectName %>s?$top=10&$skip=0"
+              }
+            }
+          },
+          "last": {
+            "type": "object",
+            "description": "pagination records last link",
+            "required": ["href"],
+            "properties": {
+              "href": {
+                "type": "string",
+                "description": "paginated data link",
+                "example": "http://localhost:3000/v1/<%= objectName %>s?$top=10&$skip=20"
+              }
+            }
+          },
+          "previous": {
+            "type": "object",
+            "description": "pagination records previous link",
+            "required": ["href"],
+            "properties": {
+              "href": {
+                "type": "string",
+                "description": "paginated data link",
+                "example": "http://localhost:3000/v1/<%= objectName %>s?$top=10&$skip=0"
+              }
+            }
+          },
+          "next": {
+            "type": "object",
+            "description": "pagination records next link",
+            "required": ["href"],
+            "properties": {
+              "href": {
+                "type": "string",
+                "description": "paginated data link",
+                "example": "http://localhost:3000/v1/<%= objectName %>s?$top=10&$skip=10"
+              }
             }
           }
         }
@@ -373,6 +584,65 @@
             "minimum": 0,
             "maximum": 150,
             "example": 30
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "<%= objectNameLowerCase %> is active or not",
+            "example": false
+          },
+          "metadata": {
+            "type": "object",
+            "example": { "property1": 10 }
+          }
+        }
+      },
+      "Metrics": {
+        "type": "string",
+        "example": "# HELP userservice_process_cpu_user_seconds_total Total user CPU time spent in seconds. \n# TYPE userservice_process_cpu_user_seconds_total counter\n userservice_process_cpu_user_seconds_total{NODE_APP_INSTANCE='abcd'} 182.82899999999137"
+      },
+      "Ready": {
+        "type": "object",
+        "required": ["status", "components"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "App health status",
+            "example": "App is healthy"
+          },
+          "components": {
+            "type": "array",
+            "description": "Application Ready components",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ReadyComponents"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "ReadyComponents": {
+        "type": "object",
+        "required": ["status", "name"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "db working fine"
+          },
+          "name": {
+            "type": "string",
+            "example": "db database"
+          }
+        }
+      },
+      "Live": {
+        "type": "object",
+        "description": "Application live status",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
           }
         }
       },

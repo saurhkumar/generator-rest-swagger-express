@@ -14,8 +14,8 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'serviceName',
-        message: 'Your service name',
-        default: 'myApp'
+        message: 'Your service name. Do not use any special characters',
+        default: 'User'
       },
       {
         type: 'input',
@@ -35,7 +35,7 @@ module.exports = class extends Generator {
         name: 'appType',
         message: 'Select application type',
         choices: ['CRUD', 'NonCRUD'],
-        default: 'NonCRUD'
+        default: 'CRUD'
       },
       {
         type: 'input',
@@ -48,7 +48,9 @@ module.exports = class extends Generator {
           return result;
         },
         message: 'Object name',
-        default: 'User'
+        default: function (response) {
+          return response.serviceName;
+        }
       },
       {
         type: 'list',
@@ -61,15 +63,18 @@ module.exports = class extends Generator {
           return result;
         },
         message: 'Select your application backend',
-        choices: ['MySQL', 'MongoDB'],
-        default: 'MySQL'
+        choices: ['MongoDB', 'MySQL'],
+        default: 'MongoDB'
       }
     ]);
   }
 
   writing() {
     this.destinationRoot(
-      path.join(this.destinationRoot(), '/' + this.answers.serviceName)
+      path.join(
+        this.destinationRoot(),
+        '/' + this._lowerCaseFirstLetter(this.answers.serviceName)
+      )
     );
     // for common files
     this.fs.copyTpl(
@@ -78,14 +83,25 @@ module.exports = class extends Generator {
       {
         serviceName: this.answers.serviceName,
         description: this.answers.description,
-        version: this.answers.version
+        version: this.answers.version,
+        appBackend: this.answers.appBackend,
+        objectName: this._capitalizeFirstLetter(this.answers.objectName),
+        objectNameLowerCase: this._lowerCaseFirstLetter(this.answers.objectName)
       }
     );
 
     // for helpers
     this.fs.copyTpl(
       glob.sync(this.templatePath('helpers/**/*')),
-      this.destinationPath(`api/helpers`)
+      this.destinationPath(`api/helpers`),
+      {
+        serviceName: this.answers.serviceName,
+        description: this.answers.description,
+        version: this.answers.version,
+        appBackend: this.answers.appBackend,
+        objectName: this._capitalizeFirstLetter(this.answers.objectName),
+        objectNameLowerCase: this._lowerCaseFirstLetter(this.answers.objectName)
+      }
     );
 
     // for specific files
@@ -110,6 +126,7 @@ module.exports = class extends Generator {
           serviceName: this.answers.serviceName,
           description: this.answers.description,
           version: this.answers.version,
+          appBackend: this.answers.appBackend,
           objectName: this._capitalizeFirstLetter(this.answers.objectName),
           objectNameLowerCase: this._lowerCaseFirstLetter(
             this.answers.objectName
