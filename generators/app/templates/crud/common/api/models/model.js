@@ -38,7 +38,7 @@ async function delete<%= objectName %>(id) {
   return dbModel.delete<%= objectName %>(id);
 }
 async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
-  let result = dbModel.getUsers(top, skip, filter, sortBy, projection);
+  let result = dbModel.get<%= objectName %>s(top, skip, filter, sortBy, projection);
   return result;
 }
 

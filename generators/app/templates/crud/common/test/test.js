@@ -302,7 +302,7 @@ describe('<%= objectName %>Service', async function () {
           .expect(404);
       });
 
-      it('FailGet<%= objectName %>TooLongUserId', async function () {
+      it('FailGet<%= objectName %>TooLongId', async function () {
         // get all  <%= objectNameLowerCase %>s
         let <%= objectNameLowerCase %>s = await request.get(v1BasePath + '/<%= objectNameLowerCase %>s/').expect(200);
 
@@ -311,7 +311,7 @@ describe('<%= objectName %>Service', async function () {
         <%= objectNameLowerCase %>s.body.value.length.should.be.eql(0);
 
         await request
-          .get(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'thisIsReallyLongUserIsMaxIs12')
+          .get(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'thisIsReallyReallyReallyLongIdMaxIs12')
           .expect(400);
       });
 
@@ -606,12 +606,12 @@ describe('<%= objectName %>Service', async function () {
           .expect(404);
       });
 
-      it('FailUpdateTooLongUserId', async function () {
+      it('FailUpdateTooLong<%= objectName %>Id', async function () {
         const <%= objectNameLowerCase %>PatchReq = {
           name: 'someRandomName'
         };
         await request
-          .patch(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'thisIsReallyLongUserIsMaxIs12')
+          .patch(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'thisIsReallyReallyReallyLongIdMaxIs12')
           .send(<%= objectNameLowerCase %>PatchReq)
           .expect(400);
       });
@@ -725,7 +725,7 @@ describe('<%= objectName %>Service', async function () {
         const <%= objectNameLowerCase %>Id = res.body.id;
 
         await request
-          .delete(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'thisIsReallyLongUserIsMaxIs12')
+          .delete(v1BasePath + '/<%= objectNameLowerCase %>s/' + 'thisIsReallyLongLongIsMaxIs12')
           .expect(400);
         // get <%= objectNameLowerCase %> again and check
         await request.get(v1BasePath + '/<%= objectNameLowerCase %>s/' + <%= objectNameLowerCase %>Id).expect(200);
@@ -793,7 +793,7 @@ describe('<%= objectName %>Service', async function () {
       await request.get(v1BasePath + `/<%= objectNameLowerCase %>s?$skip=${skip}`).expect(400);
     });
 
-    it('PaginateUsers', async function () {
+    it('Paginate<%= objectName %>s', async function () {
       // create bulk  <%= objectNameLowerCase %>s
       const count = 20;
       const skip = 8;
@@ -832,7 +832,7 @@ describe('<%= objectName %>Service', async function () {
       res.body.value.should.have.length(0);
     });
 
-    it('FailSortUsersBadParameter', async function () {
+    it('FailSort<%= objectName %>sBadParameter', async function () {
       // create bulk  <%= objectNameLowerCase %>s
       const count = 20;
       await bulkCreate<%= objectName %>s(count);
@@ -854,7 +854,7 @@ describe('<%= objectName %>Service', async function () {
         .expect(400);
     });
 
-    it('PassSortUsersWithAdditionalSpaces', async function () {
+    it('PassSort<%= objectName %>WithAdditionalSpaces', async function () {
       // create bulk  <%= objectNameLowerCase %>s
       const count = 20;
       await bulkCreate<%= objectName %>s(count);
@@ -876,7 +876,7 @@ describe('<%= objectName %>Service', async function () {
         .expect(200);
     });
 
-    it('SortUsers', async function () {
+    it('Sort<%= objectName %>s', async function () {
       // create bulk  <%= objectNameLowerCase %>s
       const count = 20;
       await bulkCreate<%= objectName %>s(count);

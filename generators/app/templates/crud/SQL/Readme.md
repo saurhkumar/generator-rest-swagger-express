@@ -16,8 +16,8 @@ This is an example of how you may give instructions on setting up your project l
 
 ### Prerequisites
 
-- You need a mongoDB up and running. To do that, use docker  
-  You can run it as a [docker](https://hub.docker.com/_/mongo) or install it as a [standalone application](https://www.mongodb.com/try/download/community)
+- You need a MySQL up and running. To do that, use docker  
+  You can run it as a [docker](https://hub.docker.com/_/mysql) or install it as a [standalone application](https://www.mysql.com/). Note you have to create two additional databases also to run this project. There is one docker compose file in test folder docker-compose.yml (`/test/docker-compose.yml`), you can use it to run and create the docker image with the required databases. If you want to use the cloud database, then change the setting in the default.json (`/config/default.json`)
   Note: In your local setup, by default service will connect to the test database. To see the database name and database authentication details see default.json file
 - Node.js > v14 needed. You can get it [here](https://nodejs.org/en/download/)
 - Better install mocha on global level `npm install --global mocha`
@@ -117,10 +117,10 @@ All the service configurations are managed through [config](https://www.npmjs.co
 ```
 ...
   "Database": {
-    "server": "mongodb://localhost:27017",  --- database server URL
+    "server": "localhost",  --- database server URL
     "name": "test",                         --- database name
-    "user": "",
-    "password": "",
+    "user": "admin",
+    "password": "admin",
     "logging": false
   },
 ...

@@ -102,7 +102,7 @@ async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
   const filterConfig = queryHelper.transformFilterQuery(filter);
   const projectionConfig = queryHelper.transformProjection(projection);
 
-  let sqlDataQuery = `SELECT ${projectionConfig} from Users ${filterConfig} ${sortConfig} LIMIT ${top} OFFSET ${skip}`;
+  let sqlDataQuery = `SELECT ${projectionConfig} from <%= objectName %>s ${filterConfig} ${sortConfig} LIMIT ${top} OFFSET ${skip}`;
   logger.info(`get<%= objectName %>s: getting <%= objectName %>s, query: ${sqlDataQuery}`);
   const data = await sequelize.query(sqlDataQuery, {
     type: 'SELECT'
@@ -128,7 +128,7 @@ async function get<%= objectName %>s(top, skip, filter, sortBy, projection) {
 
 async function delete<%= objectName %>s(filter) {
   const filterConfig = queryHelper.transformFilterQuery(filter);
-  let sqlDataQuery = `DELETE from Users ${filterConfig}`;
+  let sqlDataQuery = `DELETE from <%= objectName %>s ${filterConfig}`;
   const result = await sequelize.query(sqlDataQuery);
   return { count: result[0].affectedRows };
 }

@@ -214,11 +214,7 @@
       "cacheTimeout": null,
       "colorBackground": false,
       "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
@@ -277,7 +273,7 @@
       "tableColumn": "v16.13.1",
       "targets": [
         {
-          "expr": "sum(userservice_nodejs_version_info) by (version)",
+          "expr": "sum(<%= objectNameLowerCase %>service_nodejs_version_info) by (version)",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -305,11 +301,7 @@
       "cacheTimeout": null,
       "colorBackground": false,
       "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
@@ -368,7 +360,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(changes(userservice_process_start_time_seconds[1m]))",
+          "expr": "sum(changes(<%= objectNameLowerCase %>service_process_start_time_seconds[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -439,15 +431,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(userservice_process_cpu_seconds_total[2m]) * 100",
+          "expr": "irate(<%= objectNameLowerCase %>service_process_cpu_seconds_total[2m]) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "User CPU - {{instance}}",
+          "legendFormat": "<%= objectNameLowerCase %> CPU - {{instance}}",
           "refId": "A"
         },
         {
-          "expr": "irate(userservice_process_cpu_seconds_total[2m]) * 100",
+          "expr": "irate(<%= objectNameLowerCase %>service_process_cpu_seconds_total[2m]) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -544,7 +536,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "userservice_nodejs_eventloop_lag_seconds",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_eventloop_lag_seconds",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -642,7 +634,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "userservice_process_resident_memory_bytes",
+          "expr": "<%= objectNameLowerCase %>service_process_resident_memory_bytes",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -650,7 +642,7 @@
           "refId": "A"
         },
         {
-          "expr": "userservice_nodejs_heap_size_total_bytes",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_heap_size_total_bytes",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -658,7 +650,7 @@
           "refId": "B"
         },
         {
-          "expr": "userservice_nodejs_heap_size_used_bytes",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_heap_size_used_bytes",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -666,7 +658,7 @@
           "refId": "C"
         },
         {
-          "expr": "userservice_nodejs_external_memory_bytes",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_external_memory_bytes",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -763,7 +755,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "userservice_nodejs_active_handles_total",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_active_handles_total",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -771,7 +763,7 @@
           "refId": "A"
         },
         {
-          "expr": "userservice_nodejs_active_requests_total",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_active_requests_total",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -869,7 +861,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "userservice_nodejs_heap_space_size_total_bytes",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_heap_space_size_total_bytes",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -967,7 +959,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "userservice_nodejs_heap_space_size_used_bytes",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_heap_space_size_used_bytes",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1065,7 +1057,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "userservice_nodejs_heap_space_size_available_bytes",
+          "expr": "<%= objectNameLowerCase %>service_nodejs_heap_space_size_available_bytes",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1178,7 +1170,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(userservice_nodejs_gc_duration_seconds_count[5m])*60",
+          "expr": "rate(<%= objectNameLowerCase %>service_nodejs_gc_duration_seconds_count[5m])*60",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1294,7 +1286,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(userservice_nodejs_gc_duration_seconds_sum[5m])*60",
+          "expr": "rate(<%= objectNameLowerCase %>service_nodejs_gc_duration_seconds_sum[5m])*60",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1350,9 +1342,7 @@
   "refresh": "10s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [
-    "nodejs"
-  ],
+  "tags": ["nodejs"],
   "templating": {
     "list": [
       {
@@ -1400,17 +1390,7 @@
       "2h",
       "1d"
     ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "",
   "title": "NodeJS Application Dashboard",

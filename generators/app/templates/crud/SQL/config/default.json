@@ -1,6 +1,6 @@
 {
   "App": {
-    "name": "<%= serviceName %>",
+    "name": "<%= serviceName %>-service",
     "v1Path": "/v1/<%= serviceName %>",
     "port": 3000
   },

@@ -84,7 +84,9 @@ module.exports = class extends Generator {
         serviceName: this.answers.serviceName,
         description: this.answers.description,
         version: this.answers.version,
-        appBackend: this.answers.appBackend
+        appBackend: this.answers.appBackend,
+        objectName: this._capitalizeFirstLetter(this.answers.objectName),
+        objectNameLowerCase: this._lowerCaseFirstLetter(this.answers.objectName)
       }
     );
 
