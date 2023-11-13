@@ -7,7 +7,7 @@ module.exports = class extends Generator {
     super(args, opts);
   }
 
-  configuring() {}
+  configuring() { }
 
   async prompting() {
     this.answers = await this.prompt([
@@ -177,11 +177,19 @@ module.exports = class extends Generator {
   }
 
   _capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    if (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    } else {
+      return "";
+    }
   }
 
   _lowerCaseFirstLetter(string) {
-    return string.charAt(0).toLowerCase() + string.slice(1);
+    if (string) {
+      return string.charAt(0).toLowerCase() + string.slice(1);
+    } else {
+      return "";
+    }
   }
 
   end() {
